@@ -1,0 +1,490 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:c="using:Ps2Ulix.Gui.Controls">
+  <Styles.Resources>
+    <!-- Rounded Mplus 1c (SIL OFL, Assets/Fonts/OFL.txt) for the soft console-menu lettering -->
+    <FontFamily x:Key="FontRegular">avares://ps2ulix-gui/Assets/Fonts#Rounded Mplus 1c</FontFamily>
+    <FontFamily x:Key="FontBold">avares://ps2ulix-gui/Assets/Fonts#Rounded Mplus 1c Bold</FontFamily>
+
+    <SolidColorBrush x:Key="Ink" Color="#00030C" />
+    <SolidColorBrush x:Key="TextHi" Color="#F4F8FF" />
+    <SolidColorBrush x:Key="TextMid" Color="#AFC2E6" />
+    <SolidColorBrush x:Key="TextLo" Color="#6E81A8" />
+    <SolidColorBrush x:Key="Glow" Color="#59AAFF" />
+    <SolidColorBrush x:Key="Amber" Color="#FFC266" />
+    <SolidColorBrush x:Key="Coral" Color="#FF7D7D" />
+    <SolidColorBrush x:Key="Ice" Color="#8DB8FF" />
+    <SolidColorBrush x:Key="Violet" Color="#C3A6FF" />
+    <SolidColorBrush x:Key="Mint" Color="#72E2A4" />
+
+    <!-- Highlight bar behind the selected menu entry: light that fades out at both ends -->
+    <LinearGradientBrush x:Key="SelectBar" StartPoint="0%,0%" EndPoint="100%,0%">
+      <GradientStop Color="#0059AAFF" Offset="0" />
+      <GradientStop Color="#5559AAFF" Offset="0.18" />
+      <GradientStop Color="#3D59AAFF" Offset="0.7" />
+      <GradientStop Color="#0059AAFF" Offset="1" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="SelectLine" StartPoint="0%,0%" EndPoint="100%,0%">
+      <GradientStop Color="#00BFE0FF" Offset="0" />
+      <GradientStop Color="#CCBFE0FF" Offset="0.25" />
+      <GradientStop Color="#00BFE0FF" Offset="1" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="RuleLine" StartPoint="0%,0%" EndPoint="100%,0%">
+      <GradientStop Color="#0059AAFF" Offset="0" />
+      <GradientStop Color="#9959AAFF" Offset="0.5" />
+      <GradientStop Color="#0059AAFF" Offset="1" />
+    </LinearGradientBrush>
+
+    <SolidColorBrush x:Key="TextControlBackground" Color="#14203A" />
+    <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="#192846" />
+    <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="#0B1530" />
+    <SolidColorBrush x:Key="TextControlBorderBrush" Color="#334A75" />
+    <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="#4C6BA6" />
+    <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="#59AAFF" />
+    <SolidColorBrush x:Key="TextControlForeground" Color="#F4F8FF" />
+    <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#F4F8FF" />
+
+    <StreamGeometry x:Key="IcSliders">M4 7h10M18 7h2M4 17h2M10 17h10M14 5h4v4h-4ZM6 15h4v4H6Z</StreamGeometry>
+    <StreamGeometry x:Key="IcConvert">M4 8h13M14 5l3 3-3 3M20 16H7M10 13l-3 3 3 3</StreamGeometry>
+    <StreamGeometry x:Key="IcPencil">M4 20h4L19 9l-4-4L4 16ZM13.5 6.5l4 4</StreamGeometry>
+    <StreamGeometry x:Key="IcJoin">M6 4v6a6 6 0 0 0 6 6h7M16 13l3 3-3 3</StreamGeometry>
+    <StreamGeometry x:Key="IcTrash">M4 7H20M9 7V4h6v3M6 7l1 13h10l1-13</StreamGeometry>
+    <StreamGeometry x:Key="IcPlus">M12 5V19M5 12H19</StreamGeometry>
+    <StreamGeometry x:Key="IcImage">M4 5h16v14H4ZM4 16l5-5 4 4 3-3 4 4M15 9h.01</StreamGeometry>
+    <StreamGeometry x:Key="IcShield">M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6ZM9 12l2 2 4-4</StreamGeometry>
+    <StreamGeometry x:Key="IcLayers">M12 3l9 5-9 5-9-5ZM3 13l9 5 9-5</StreamGeometry>
+    <StreamGeometry x:Key="IcSort">M7 4v16M4 17l3 3 3-3M14 6h7M14 12h5M14 18h3</StreamGeometry>
+    <StreamGeometry x:Key="IcFilter">M4 5h16l-6 8v6l-4-2v-4Z</StreamGeometry>
+    <StreamGeometry x:Key="IcBack">M15 5l-7 7 7 7</StreamGeometry>
+    <StreamGeometry x:Key="IcFolder">M3 7a2 2 0 0 1 2-2h4l2 3h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z</StreamGeometry>
+    <StreamGeometry x:Key="IcRefresh">M20 12a8 8 0 1 1-2.34-5.66L20 8.7M20 3.7v5h-5</StreamGeometry>
+    <StreamGeometry x:Key="IcSearch">M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14ZM16 16l5 5</StreamGeometry>
+  </Styles.Resources>
+
+  <Style Selector="Window">
+    <Setter Property="FontFamily" Value="{DynamicResource FontRegular}" />
+  </Style>
+
+  <!-- Text roles -->
+  <Style Selector="TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource TextHi}" />
+  </Style>
+  <Style Selector="TextBlock.title">
+    <Setter Property="FontFamily" Value="{DynamicResource FontBold}" />
+    <Setter Property="FontSize" Value="38" />
+    <Setter Property="Foreground" Value="{DynamicResource TextHi}" />
+  </Style>
+  <Style Selector="TextBlock.glow">
+    <Setter Property="Effect">
+      <DropShadowEffect Color="#59AAFF" BlurRadius="16" OffsetX="0" OffsetY="0" Opacity="0.95" />
+    </Setter>
+  </Style>
+  <Style Selector="TextBlock.dim">
+    <Setter Property="Foreground" Value="{DynamicResource TextMid}" />
+    <Setter Property="FontSize" Value="14" />
+  </Style>
+  <Style Selector="TextBlock.lo">
+    <Setter Property="Foreground" Value="{DynamicResource TextLo}" />
+    <Setter Property="FontSize" Value="13" />
+  </Style>
+
+  <Style Selector="Path.ic">
+    <Setter Property="Width" Value="20" />
+    <Setter Property="Height" Value="20" />
+    <Setter Property="Stretch" Value="Uniform" />
+    <Setter Property="Stroke" Value="{DynamicResource TextMid}" />
+    <Setter Property="StrokeThickness" Value="1.7" />
+    <Setter Property="StrokeLineCap" Value="Round" />
+    <Setter Property="StrokeJoin" Value="Round" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+  </Style>
+
+  <!-- Screens fade and settle in, like the console's menu transitions -->
+  <Style Selector="Panel.screen">
+    <Style.Animations>
+      <Animation Duration="0:0:0.45" Easing="CubicEaseOut">
+        <KeyFrame Cue="0%">
+          <Setter Property="Opacity" Value="0" />
+          <Setter Property="ScaleTransform.ScaleX" Value="1.06" />
+          <Setter Property="ScaleTransform.ScaleY" Value="1.06" />
+        </KeyFrame>
+        <KeyFrame Cue="100%">
+          <Setter Property="Opacity" Value="1" />
+          <Setter Property="ScaleTransform.ScaleX" Value="1" />
+          <Setter Property="ScaleTransform.ScaleY" Value="1" />
+        </KeyFrame>
+      </Animation>
+    </Style.Animations>
+  </Style>
+  <Style Selector="Panel.screen">
+    <Setter Property="RenderTransform">
+      <ScaleTransform />
+    </Setter>
+  </Style>
+
+  <!-- Bare lists: item templates draw their own states -->
+  <Style Selector="ListBox.bare">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Hidden" />
+    <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Hidden" />
+  </Style>
+  <Style Selector="ListBox.bare ListBoxItem">
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <ContentPresenter Name="PART_ContentPresenter" Background="Transparent"
+                          Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"
+                          Padding="{TemplateBinding Padding}" />
+      </ControlTemplate>
+    </Setter>
+  </Style>
+
+  <!-- Fluent paints its own hover/selection box on the presenter; these lists draw their own -->
+  <Style Selector="ListBox.bare ListBoxItem:pointerover /template/ ContentPresenter#PART_ContentPresenter, ListBox.bare ListBoxItem:pressed /template/ ContentPresenter#PART_ContentPresenter, ListBox.bare ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter, ListBox.bare ListBoxItem:selected:pointerover /template/ ContentPresenter#PART_ContentPresenter, ListBox.bare ListBoxItem:selected:pressed /template/ ContentPresenter#PART_ContentPresenter, ListBox.bare ListBoxItem:selected:focus /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="Transparent" />
+  </Style>
+
+  <!-- Menu lists: glowing bar behind the selected entry, slow pulse -->
+  <Style Selector="ListBox.menu ListBoxItem">
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Panel>
+          <Panel Name="Bar" Opacity="0">
+            <Border Background="{DynamicResource SelectBar}" CornerRadius="4" />
+            <Border Height="1" VerticalAlignment="Top" Background="{DynamicResource SelectLine}" />
+            <Border Height="1" VerticalAlignment="Bottom" Background="{DynamicResource SelectLine}" />
+          </Panel>
+          <ContentPresenter Name="PART_ContentPresenter" Background="Transparent"
+                            Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"
+                            Padding="{TemplateBinding Padding}" />
+        </Panel>
+      </ControlTemplate>
+    </Setter>
+    <Setter Property="Padding" Value="18,10" />
+    <Setter Property="Cursor" Value="Hand" />
+  </Style>
+  <Style Selector="ListBox.menu ListBoxItem:pointerover /template/ Panel#Bar">
+    <Setter Property="Opacity" Value="0.35" />
+  </Style>
+  <Style Selector="ListBox.menu ListBoxItem:selected /template/ Panel#Bar">
+    <Style.Animations>
+      <Animation Duration="0:0:1.6" IterationCount="Infinite" PlaybackDirection="Alternate" Easing="SineEaseInOut">
+        <KeyFrame Cue="0%"><Setter Property="Opacity" Value="0.65" /></KeyFrame>
+        <KeyFrame Cue="100%"><Setter Property="Opacity" Value="1" /></KeyFrame>
+      </Animation>
+    </Style.Animations>
+  </Style>
+  <Style Selector="ListBox.menu ListBoxItem TextBlock.label">
+    <Setter Property="Foreground" Value="{DynamicResource TextMid}" />
+    <Setter Property="FontSize" Value="19" />
+  </Style>
+  <Style Selector="ListBox.menu ListBoxItem:selected TextBlock.label">
+    <Setter Property="Foreground" Value="{DynamicResource TextHi}" />
+    <Setter Property="Effect">
+      <DropShadowEffect Color="#59AAFF" BlurRadius="14" OffsetX="0" OffsetY="0" Opacity="0.95" />
+    </Setter>
+  </Style>
+  <Style Selector="ListBox.menu ListBoxItem:selected Path.ic">
+    <Setter Property="Stroke" Value="{DynamicResource TextHi}" />
+  </Style>
+  <Style Selector="ListBox.menu ListBoxItem:disabled">
+    <Setter Property="Opacity" Value="0.3" />
+  </Style>
+  <Style Selector="ListBox.menu ListBoxItem:selected TextBlock.label.danger">
+    <Setter Property="Foreground" Value="#FFD9D9" />
+    <Setter Property="Effect">
+      <DropShadowEffect Color="#FF7D7D" BlurRadius="14" OffsetX="0" OffsetY="0" Opacity="0.95" />
+    </Setter>
+  </Style>
+
+  <!-- Icon grids: unselected icons sit back a little -->
+  <Style Selector="ListBox.icons ListBoxItem">
+    <Setter Property="Opacity" Value="0.72" />
+    <Setter Property="Transitions">
+      <Transitions>
+        <DoubleTransition Property="Opacity" Duration="0:0:0.25" />
+      </Transitions>
+    </Setter>
+  </Style>
+  <Style Selector="ListBox.icons ListBoxItem:pointerover">
+    <Setter Property="Opacity" Value="0.9" />
+  </Style>
+  <Style Selector="ListBox.icons ListBoxItem:selected">
+    <Setter Property="Opacity" Value="1" />
+  </Style>
+  <Style Selector="ListBox.icons ListBoxItem TextBlock.label">
+    <Setter Property="Foreground" Value="{DynamicResource TextMid}" />
+  </Style>
+  <Style Selector="ListBox.icons ListBoxItem:selected TextBlock.label">
+    <Setter Property="Foreground" Value="{DynamicResource TextHi}" />
+    <Setter Property="Effect">
+      <DropShadowEffect Color="#59AAFF" BlurRadius="14" OffsetX="0" OffsetY="0" Opacity="0.95" />
+    </Setter>
+  </Style>
+
+  <!-- Game case: cover with a thin light rim; the selected one glows -->
+  <Style Selector="Border.case">
+    <Setter Property="CornerRadius" Value="5" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="BorderBrush" Value="#40C9DCFF" />
+    <Setter Property="Background" Value="#0A1630" />
+    <Setter Property="BoxShadow" Value="0 10 24 0 #A0000000" />
+  </Style>
+  <Style Selector="ListBox.icons ListBoxItem:selected Border.case, Border.case.hero">
+    <Setter Property="BorderBrush" Value="#B0D2E6FF" />
+    <Setter Property="BoxShadow" Value="0 0 30 4 #8859AAFF, 0 14 30 0 #B0000000" />
+  </Style>
+  <Style Selector="Border.caseclip">
+    <Setter Property="ClipToBounds" Value="True" />
+    <Setter Property="CornerRadius" Value="4" />
+  </Style>
+  <Style Selector="Rectangle.reflection">
+    <Setter Property="Opacity" Value="0.28" />
+    <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+    <Setter Property="RenderTransform" Value="scaleY(-1)" />
+    <Setter Property="OpacityMask">
+      <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+        <GradientStop Color="#00000000" Offset="0.45" />
+        <GradientStop Color="#FF000000" Offset="1" />
+      </LinearGradientBrush>
+    </Setter>
+  </Style>
+
+  <!-- Toolbar and title-bar buttons: quiet text with an icon, lit on hover -->
+  <Style Selector="Button.tool, Button.crumb">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="CornerRadius" Value="6" />
+    <Setter Property="Padding" Value="10,7" />
+    <Setter Property="FontSize" Value="14" />
+    <Setter Property="Cursor" Value="Hand" />
+    <Setter Property="Foreground" Value="{DynamicResource TextMid}" />
+  </Style>
+  <Style Selector="Button.tool /template/ ContentPresenter#PART_ContentPresenter, Button.crumb /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Transitions">
+      <Transitions>
+        <BrushTransition Property="Background" Duration="0:0:0.12" />
+      </Transitions>
+    </Setter>
+  </Style>
+  <Style Selector="Button.tool:pointerover /template/ ContentPresenter#PART_ContentPresenter, Button.crumb:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="#2259AAFF" />
+    <Setter Property="Foreground" Value="{DynamicResource TextHi}" />
+  </Style>
+  <Style Selector="Button.tool:pressed /template/ ContentPresenter#PART_ContentPresenter, Button.crumb:pressed /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="#3359AAFF" />
+  </Style>
+  <Style Selector="Button.tool:disabled /template/ ContentPresenter#PART_ContentPresenter, Button.crumb:disabled /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Opacity" Value="0.35" />
+  </Style>
+  <Style Selector="Button.tool TextBlock, Button.crumb TextBlock">
+    <Setter Property="Foreground" Value="{Binding $parent[Button].Foreground}" />
+  </Style>
+  <Style Selector="Button.tool:pointerover Path.ic">
+    <Setter Property="Stroke" Value="{DynamicResource TextHi}" />
+  </Style>
+  <Style Selector="Button.tool.primary">
+    <Setter Property="Foreground" Value="White" />
+  </Style>
+  <Style Selector="Button.tool.primary /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background">
+      <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+        <GradientStop Color="#4F8FEA" Offset="0" />
+        <GradientStop Color="#2A5BC0" Offset="1" />
+      </LinearGradientBrush>
+    </Setter>
+  </Style>
+  <Style Selector="Button.tool.primary:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background">
+      <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+        <GradientStop Color="#69A5FF" Offset="0" />
+        <GradientStop Color="#3468D6" Offset="1" />
+      </LinearGradientBrush>
+    </Setter>
+    <Setter Property="Foreground" Value="White" />
+  </Style>
+  <Style Selector="Button.tool.primary Path.ic">
+    <Setter Property="Stroke" Value="White" />
+  </Style>
+  <Style Selector="Button.tool.warn">
+    <Setter Property="Foreground" Value="{DynamicResource Amber}" />
+  </Style>
+  <Style Selector="Button.crumb.here">
+    <Setter Property="Foreground" Value="{DynamicResource TextHi}" />
+  </Style>
+
+  <!-- Hint bar: face-button badge + label, clickable -->
+  <Style Selector="Button.hint">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="Padding" Value="6,4" />
+    <Setter Property="Cursor" Value="Hand" />
+    <Setter Property="Foreground" Value="{DynamicResource TextMid}" />
+    <Setter Property="FontSize" Value="15" />
+  </Style>
+  <Style Selector="Button.hint /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="Transparent" />
+  </Style>
+  <Style Selector="Button.hint:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Foreground" Value="{DynamicResource TextHi}" />
+  </Style>
+  <Style Selector="Button.hint:pressed /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="Transparent" />
+  </Style>
+  <Style Selector="Button.hint TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource TextMid}" />
+  </Style>
+  <Style Selector="Button.hint:pointerover TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource TextHi}" />
+  </Style>
+
+  <!-- Dialog answers (Yes / No): text with the glow bar when focused -->
+  <Style Selector="Button.opt">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="Padding" Value="26,9" />
+    <Setter Property="MinWidth" Value="120" />
+    <Setter Property="HorizontalContentAlignment" Value="Center" />
+    <Setter Property="Cursor" Value="Hand" />
+    <Setter Property="FontSize" Value="19" />
+    <Setter Property="Foreground" Value="{DynamicResource TextMid}" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Panel>
+          <Panel Name="Bar" Opacity="0">
+            <Border Background="{DynamicResource SelectBar}" CornerRadius="4" />
+            <Border Height="1" VerticalAlignment="Top" Background="{DynamicResource SelectLine}" />
+            <Border Height="1" VerticalAlignment="Bottom" Background="{DynamicResource SelectLine}" />
+          </Panel>
+          <ContentPresenter Name="PART_ContentPresenter" Content="{TemplateBinding Content}" Padding="{TemplateBinding Padding}"
+                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            Foreground="{TemplateBinding Foreground}" />
+        </Panel>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="Button.opt:pointerover /template/ Panel#Bar">
+    <Setter Property="Opacity" Value="0.4" />
+  </Style>
+  <Style Selector="Button.opt:focus /template/ Panel#Bar">
+    <Setter Property="Opacity" Value="1" />
+  </Style>
+  <Style Selector="Button.opt:focus">
+    <Setter Property="Foreground" Value="{DynamicResource TextHi}" />
+  </Style>
+
+  <!-- System-configuration rows: label left, value right, glow while focused -->
+  <Style Selector="CheckBox.cfg, Button.cfg">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="Padding" Value="18,8" />
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
+    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+    <Setter Property="Cursor" Value="Hand" />
+    <Setter Property="FontSize" Value="17" />
+    <Setter Property="Foreground" Value="{DynamicResource TextMid}" />
+  </Style>
+  <Style Selector="CheckBox.cfg">
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Panel>
+          <Panel Name="Bar" Opacity="0">
+            <Border Background="{DynamicResource SelectBar}" CornerRadius="4" />
+            <Border Height="1" VerticalAlignment="Top" Background="{DynamicResource SelectLine}" />
+            <Border Height="1" VerticalAlignment="Bottom" Background="{DynamicResource SelectLine}" />
+          </Panel>
+          <Grid ColumnDefinitions="*,Auto" Margin="{TemplateBinding Padding}">
+            <ContentPresenter Name="PART_ContentPresenter" Content="{TemplateBinding Content}" Foreground="{TemplateBinding Foreground}" VerticalAlignment="Center" />
+            <TextBlock Name="On" Grid.Column="1" Text="On" IsVisible="False" Foreground="{DynamicResource TextHi}" FontSize="17" />
+            <TextBlock Name="Off" Grid.Column="1" Text="Off" Foreground="{DynamicResource TextLo}" FontSize="17" />
+          </Grid>
+        </Panel>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="CheckBox.cfg:checked /template/ TextBlock#On">
+    <Setter Property="IsVisible" Value="True" />
+  </Style>
+  <Style Selector="CheckBox.cfg:checked /template/ TextBlock#Off">
+    <Setter Property="IsVisible" Value="False" />
+  </Style>
+  <Style Selector="Button.cfg">
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Panel>
+          <Panel Name="Bar" Opacity="0">
+            <Border Background="{DynamicResource SelectBar}" CornerRadius="4" />
+            <Border Height="1" VerticalAlignment="Top" Background="{DynamicResource SelectLine}" />
+            <Border Height="1" VerticalAlignment="Bottom" Background="{DynamicResource SelectLine}" />
+          </Panel>
+          <ContentPresenter Name="PART_ContentPresenter" Content="{TemplateBinding Content}" Padding="{TemplateBinding Padding}"
+                            HorizontalContentAlignment="Stretch" Foreground="{TemplateBinding Foreground}" />
+        </Panel>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="Panel.bar">
+    <Setter Property="Opacity" Value="0" />
+  </Style>
+  <Style Selector="CheckBox.cfg:focus /template/ Panel#Bar, Button.cfg:focus /template/ Panel#Bar, Grid.cfgtext:focus-within Panel.bar">
+    <Setter Property="Opacity" Value="1" />
+  </Style>
+  <Style Selector="CheckBox.cfg:pointerover /template/ Panel#Bar, Button.cfg:pointerover /template/ Panel#Bar">
+    <Setter Property="Opacity" Value="0.35" />
+  </Style>
+  <Style Selector="CheckBox.cfg:focus, Button.cfg:focus">
+    <Setter Property="Foreground" Value="{DynamicResource TextHi}" />
+  </Style>
+
+  <Style Selector="TextBox">
+    <Setter Property="FontSize" Value="17" />
+    <Setter Property="CornerRadius" Value="4" />
+  </Style>
+  <Style Selector="TextBox.inline">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0,0,0,1" />
+    <Setter Property="MinWidth" Value="180" />
+    <Setter Property="TextAlignment" Value="Right" />
+    <Setter Property="Padding" Value="4,2" />
+  </Style>
+
+  <!-- Copy progress -->
+  <Style Selector="ProgressBar.job">
+    <Setter Property="Height" Value="10" />
+    <Setter Property="MinHeight" Value="10" />
+    <Setter Property="CornerRadius" Value="5" />
+    <Setter Property="Background" Value="#1A2D55" />
+    <Setter Property="Foreground">
+      <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+        <GradientStop Color="#BFE0FF" Offset="0" />
+        <GradientStop Color="#4F9BFF" Offset="0.5" />
+        <GradientStop Color="#2559C9" Offset="1" />
+      </LinearGradientBrush>
+    </Setter>
+  </Style>
+
+  <!-- Format chips in the header -->
+  <Style Selector="TextBlock.fmt">
+    <Setter Property="FontFamily" Value="{DynamicResource FontBold}" />
+    <Setter Property="FontSize" Value="14" />
+    <Setter Property="Foreground" Value="{DynamicResource TextMid}" />
+  </Style>
+
+  <!-- Spinning disc while a job runs -->
+  <Style Selector="Control.spin">
+    <Setter Property="RenderTransform">
+      <RotateTransform />
+    </Setter>
+    <Style.Animations>
+      <Animation Duration="0:0:1.6" IterationCount="Infinite">
+        <KeyFrame Cue="0%"><Setter Property="RotateTransform.Angle" Value="0" /></KeyFrame>
+        <KeyFrame Cue="100%"><Setter Property="RotateTransform.Angle" Value="360" /></KeyFrame>
+      </Animation>
+    </Style.Animations>
+  </Style>
+</Styles>

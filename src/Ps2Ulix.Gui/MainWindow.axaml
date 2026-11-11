@@ -1,0 +1,362 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="using:Ps2Ulix.Gui"
+        xmlns:c="using:Ps2Ulix.Gui.Controls"
+        x:Class="Ps2Ulix.Gui.MainWindow"
+        x:DataType="local:MainViewModel"
+        Title="PS2Ulix"
+        Width="1280" Height="800" MinWidth="980" MinHeight="640"
+        WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource Ink}"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaChromeHints="PreferSystemChrome"
+        ExtendClientAreaTitleBarHeightHint="52"
+        DragDrop.AllowDrop="True">
+  <Window.Styles>
+    <!-- Disabled menu entries can't be highlighted, so arrow keys skip them -->
+    <Style Selector="ListBox.actions ListBoxItem" x:DataType="local:MenuAction">
+      <Setter Property="IsEnabled" Value="{Binding IsEnabled}" />
+    </Style>
+  </Window.Styles>
+
+  <Panel>
+    <c:AmbientBackground Tint="{Binding AmbientTint}" Energized="{Binding IsBusy}" />
+
+    <!-- Polished floor below the horizon, as in the console's save screens -->
+    <Grid RowDefinitions="58*,42*" IsHitTestVisible="False">
+      <Border Grid.Row="1">
+        <Border.Background>
+          <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+            <GradientStop Color="#3359AAFF" Offset="0" />
+            <GradientStop Color="#0D0B2050" Offset="0.12" />
+            <GradientStop Color="#55020818" Offset="1" />
+          </LinearGradientBrush>
+        </Border.Background>
+      </Border>
+      <Border Grid.Row="1" Height="1" VerticalAlignment="Top" Background="{DynamicResource RuleLine}" Opacity="0.5" />
+    </Grid>
+
+    <Grid x:Name="Shell" RowDefinitions="52,*,44">
+      <Grid.Transitions>
+        <Transitions>
+          <EffectTransition Property="Effect" Duration="0:0:0.2" />
+        </Transitions>
+      </Grid.Transitions>
+
+      <!-- Title bar: back + where you are. Empty space stays the window's drag area. -->
+      <StackPanel Orientation="Horizontal" Spacing="2" Margin="20,0,160,0" VerticalAlignment="Center">
+        <Button Classes="tool" Command="{Binding BackCommand}" IsVisible="{Binding !IsBrowserScreen}" ToolTip.Tip="Back (Esc)">
+          <StackPanel Orientation="Horizontal" Spacing="6">
+            <Path Classes="ic" Width="16" Height="16" Data="{DynamicResource IcBack}" />
+            <TextBlock Text="Back" />
+          </StackPanel>
+        </Button>
+        <Border Width="1" Height="18" Background="#33FFFFFF" Margin="10,0" IsVisible="{Binding !IsBrowserScreen}" />
+        <Button Classes="crumb" Content="Browser" Command="{Binding GoToBrowserCommand}" Classes.here="{Binding IsBrowserScreen}" />
+        <TextBlock Text="›" Classes="lo" FontSize="18" VerticalAlignment="Center" Margin="2,0" IsVisible="{Binding !IsBrowserScreen}" />
+        <Button Classes="crumb" Content="{Binding SelectedDrive.Title, FallbackValue=''}" Command="{Binding GoToDriveCommand}"
+                IsVisible="{Binding !IsBrowserScreen}" Classes.here="{Binding IsDriveScreen}" MaxWidth="320" />
+        <TextBlock Text="›" Classes="lo" FontSize="18" VerticalAlignment="Center" Margin="2,0" IsVisible="{Binding IsGameScreen}" />
+        <TextBlock Classes="dim" FontSize="14" VerticalAlignment="Center" Margin="8,0" MaxWidth="360" TextTrimming="CharacterEllipsis"
+                   Text="{Binding SelectedGame.Name, FallbackValue=''}" IsVisible="{Binding IsGameScreen}" Foreground="{DynamicResource TextHi}" />
+      </StackPanel>
+
+      <!-- Browser: the drives -->
+      <Panel Grid.Row="1" Classes="screen" IsVisible="{Binding IsBrowserScreen}">
+        <Grid RowDefinitions="Auto,*" Margin="64,4,64,0">
+          <Grid ColumnDefinitions="*,Auto">
+            <StackPanel Spacing="2">
+              <TextBlock Classes="title glow" Text="Browser" FontSize="44" />
+              <TextBlock Classes="dim" Text="Click a drive to see its games. New USB drives show up here by themselves." />
+            </StackPanel>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="6" VerticalAlignment="Bottom">
+              <Button Classes="tool" Command="{Binding BrowseCommand}">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                  <Path Classes="ic" Width="16" Height="16" Data="{DynamicResource IcFolder}" />
+                  <TextBlock Text="Open folder…" />
+                </StackPanel>
+              </Button>
+              <Button Classes="tool" Command="{Binding RefreshDrivesCommand}" ToolTip.Tip="F5">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                  <Path Classes="ic" Width="16" Height="16" Data="{DynamicResource IcRefresh}" />
+                  <TextBlock Text="Refresh" />
+                </StackPanel>
+              </Button>
+            </StackPanel>
+          </Grid>
+          <TextBlock Grid.Row="1" Classes="dim" Text="No drives found. Plug in a USB drive or open a folder."
+                     HorizontalAlignment="Center" VerticalAlignment="Center" IsVisible="{Binding !Drives.Count}" />
+          <ListBox x:Name="DriveList" Grid.Row="1" Classes="bare icons" ItemsSource="{Binding Drives}" SelectedItem="{Binding SelectedDrive}"
+                   HorizontalAlignment="Center" VerticalAlignment="Center" Tapped="OnDriveTapped">
+            <ListBox.ItemsPanel>
+              <ItemsPanelTemplate>
+                <StackPanel Orientation="Horizontal" Spacing="18" />
+              </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+            <ListBox.ItemTemplate>
+              <DataTemplate x:DataType="local:DriveItem">
+                <StackPanel Width="200" Spacing="4" Margin="0,24" Background="Transparent" Cursor="Hand">
+                  <c:SwayPanel IsActive="{Binding $parent[ListBoxItem].IsSelected}" ActiveScale="1.18" Height="190">
+                    <StackPanel>
+                      <c:DeviceArt x:Name="Art" Kind="{Binding Kind}" Width="140" Height="140" />
+                      <Panel Height="44" ClipToBounds="True">
+                        <Rectangle Classes="reflection" Width="140" Height="140" VerticalAlignment="Top">
+                          <Rectangle.Fill>
+                            <VisualBrush Visual="{Binding #Art}" Stretch="Fill" />
+                          </Rectangle.Fill>
+                        </Rectangle>
+                      </Panel>
+                    </StackPanel>
+                  </c:SwayPanel>
+                  <TextBlock Classes="label" Text="{Binding Title}" FontSize="19" HorizontalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                  <TextBlock Classes="lo" Text="{Binding Detail}" HorizontalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                </StackPanel>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+        </Grid>
+      </Panel>
+
+      <!-- A drive: its games as floating cases -->
+      <Panel Grid.Row="1" Classes="screen" IsVisible="{Binding IsDriveScreen}">
+        <Grid RowDefinitions="Auto,Auto,*" Margin="64,4,64,0">
+          <Grid ColumnDefinitions="*,Auto" MinHeight="96">
+            <StackPanel Spacing="2" VerticalAlignment="Top">
+              <TextBlock Classes="title glow" FontSize="34" Text="{Binding HeaderTitle}" MaxWidth="760" HorizontalAlignment="Left"
+                         TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" />
+              <TextBlock Classes="dim" Text="{Binding HeaderDetail}" />
+            </StackPanel>
+            <StackPanel Grid.Column="1" Spacing="6" HorizontalAlignment="Right" VerticalAlignment="Top">
+              <TextBlock Classes="title" FontSize="30" HorizontalAlignment="Right" Text="{Binding SelectedGame.Size, FallbackValue=''}" />
+              <TextBlock Classes="lo" HorizontalAlignment="Right" Text="{Binding FreeText}" />
+              <c:CapacityBar Width="240" Height="4" HorizontalAlignment="Right" Total="{Binding CapacityTotal}"
+                             Segments="{Binding CapacitySegments}" Highlight="{Binding SelectedGame}" />
+            </StackPanel>
+          </Grid>
+
+          <!-- Toolbar: everything you can do on this drive, in plain sight -->
+          <Grid Grid.Row="1" ColumnDefinitions="Auto,*,Auto" Margin="0,6,0,4">
+            <TextBox x:Name="SearchBox" Width="300" Watermark="Search games…" Text="{Binding SearchText}" VerticalAlignment="Center">
+              <TextBox.InnerLeftContent>
+                <Path Classes="ic" Width="15" Height="15" Margin="10,0,0,0" Data="{DynamicResource IcSearch}" Stroke="{DynamicResource TextLo}" />
+              </TextBox.InnerLeftContent>
+            </TextBox>
+            <Button Grid.Column="1" Classes="tool warn" Margin="12,0,0,0" HorizontalAlignment="Left" Command="{Binding CheckCommand}"
+                    IsVisible="{Binding HasIssues}" ToolTip.Tip="Show what's wrong">
+              <TextBlock Text="{Binding IssueCount, StringFormat='{}{0} issue(s) on this drive'}" />
+            </Button>
+            <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="2">
+              <Button Classes="tool primary" Command="{Binding AddGameCommand}" ToolTip.Tip="Ctrl+O, or drop an .iso on the window">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                  <Path Classes="ic" Width="16" Height="16" Data="{DynamicResource IcPlus}" />
+                  <TextBlock Text="Add game" />
+                </StackPanel>
+              </Button>
+              <Button Classes="tool" Command="{Binding DownloadCoversCommand}">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                  <Path Classes="ic" Width="16" Height="16" Data="{DynamicResource IcImage}" />
+                  <TextBlock Text="Covers" />
+                </StackPanel>
+              </Button>
+              <Button Classes="tool" Command="{Binding CheckCommand}">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                  <Path Classes="ic" Width="16" Height="16" Data="{DynamicResource IcShield}" />
+                  <TextBlock Text="Check" />
+                </StackPanel>
+              </Button>
+              <Button Classes="tool" Command="{Binding RebuildCommand}" ToolTip.Tip="Rebuild ul.cfg from the files on the drive">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                  <Path Classes="ic" Width="16" Height="16" Data="{DynamicResource IcLayers}" />
+                  <TextBlock Text="Rebuild" />
+                </StackPanel>
+              </Button>
+              <Border Width="1" Height="18" Background="#33FFFFFF" Margin="8,0" />
+              <Button Classes="tool" Command="{Binding CycleSortCommand}" ToolTip.Tip="Click to change">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                  <Path Classes="ic" Width="16" Height="16" Data="{DynamicResource IcSort}" />
+                  <TextBlock Text="{Binding SortLabel}" />
+                </StackPanel>
+              </Button>
+              <Button Classes="tool" Command="{Binding CycleFilterCommand}" ToolTip.Tip="Click to change">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                  <Path Classes="ic" Width="16" Height="16" Data="{DynamicResource IcFilter}" />
+                  <TextBlock Text="{Binding FormatFilter}" />
+                </StackPanel>
+              </Button>
+            </StackPanel>
+          </Grid>
+
+          <Panel Grid.Row="2">
+            <ListBox x:Name="GameList" Classes="bare icons" ItemsSource="{Binding VisibleGames}" SelectedItem="{Binding SelectedGame}"
+                     IsTextSearchEnabled="False" Tapped="OnGameTapped" Margin="-12,0">
+              <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <WrapPanel />
+                </ItemsPanelTemplate>
+              </ListBox.ItemsPanel>
+              <ListBox.ItemTemplate>
+                <DataTemplate x:DataType="local:GameRow">
+                  <c:SwayPanel IsActive="{Binding $parent[ListBoxItem].IsSelected}" Width="166" Height="258" Background="Transparent"
+                               Cursor="Hand" ToolTip.Tip="{Binding Name}">
+                    <StackPanel Margin="0,20,0,0">
+                      <Border x:Name="Case" Classes="case" Width="118" Height="166">
+                        <Border Classes="caseclip">
+                          <Panel>
+                            <Panel IsVisible="{Binding !HasCover}" Background="#0B1834">
+                              <c:DiscArt Width="92" Height="92" Seed="{Binding GameId}" IsDvd="{Binding IsDvd}" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,18" />
+                              <TextBlock Classes="lo" FontSize="11" Text="{Binding Name}" TextTrimming="CharacterEllipsis" Margin="8,0,8,10"
+                                         HorizontalAlignment="Center" VerticalAlignment="Bottom" />
+                            </Panel>
+                            <Image Source="{Binding Cover}" Stretch="UniformToFill" />
+                            <Ellipse Width="10" Height="10" Fill="{DynamicResource Amber}" HorizontalAlignment="Right" VerticalAlignment="Top"
+                                     Margin="6" IsVisible="{Binding HasProblem}" />
+                          </Panel>
+                        </Border>
+                      </Border>
+                      <Panel Height="52" ClipToBounds="True" Margin="0,6,0,0">
+                        <Rectangle Classes="reflection" Width="118" Height="166" VerticalAlignment="Top">
+                          <Rectangle.Fill>
+                            <VisualBrush Visual="{Binding #Case}" Stretch="Fill" />
+                          </Rectangle.Fill>
+                        </Rectangle>
+                      </Panel>
+                    </StackPanel>
+                  </c:SwayPanel>
+                </DataTemplate>
+              </ListBox.ItemTemplate>
+            </ListBox>
+            <StackPanel IsVisible="{Binding HasNoVisibleGames}" IsHitTestVisible="False" Spacing="18"
+                        HorizontalAlignment="Center" VerticalAlignment="Center">
+              <c:DiscArt Width="110" Height="110" Seed="empty" Opacity="0.7" />
+              <TextBlock Classes="dim" Text="{Binding EmptyText}" FontSize="18" HorizontalAlignment="Center" />
+            </StackPanel>
+          </Panel>
+        </Grid>
+      </Panel>
+
+      <!-- One game: big case and what you can do with it -->
+      <Panel Grid.Row="1" Classes="screen" IsVisible="{Binding IsGameScreen}">
+        <Grid ColumnDefinitions="5*,6*" Margin="64,0">
+          <c:SwayPanel IsActive="True" ActiveScale="1" ActiveAmplitude="18" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <StackPanel DataContext="{Binding SelectedGame}" x:DataType="local:GameRow">
+              <Border x:Name="HeroCase" Classes="case hero" Width="250" Height="352">
+                <Border Classes="caseclip">
+                  <Panel>
+                    <Panel IsVisible="{Binding !HasCover}" Background="#0B1834">
+                      <c:DiscArt Width="190" Height="190" Seed="{Binding GameId}" IsDvd="{Binding IsDvd}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Panel>
+                    <Image Source="{Binding Cover}" Stretch="UniformToFill" />
+                  </Panel>
+                </Border>
+              </Border>
+              <Panel Height="96" ClipToBounds="True" Margin="0,8,0,0">
+                <Rectangle Classes="reflection" Width="250" Height="352" VerticalAlignment="Top">
+                  <Rectangle.Fill>
+                    <VisualBrush Visual="{Binding #HeroCase}" Stretch="Fill" />
+                  </Rectangle.Fill>
+                </Rectangle>
+              </Panel>
+            </StackPanel>
+          </c:SwayPanel>
+
+          <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="6">
+            <TextBlock Classes="title glow" FontSize="34" Text="{Binding SelectedGame.Name, FallbackValue=''}" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" />
+            <TextBlock Classes="dim" Text="{Binding HeaderDetail}" />
+            <TextBlock Classes="dim" Text="{Binding SelectedGame.Size, FallbackValue=''}" />
+            <TextBlock Foreground="{DynamicResource Amber}" FontSize="15" Text="{Binding SelectedGame.Status, FallbackValue=''}"
+                       IsVisible="{Binding SelectedGame.HasProblem, FallbackValue=False}" />
+            <Border Height="1" Background="{DynamicResource RuleLine}" Margin="0,16,0,10" />
+            <ListBox x:Name="ActionList" Classes="bare menu actions" Tapped="OnActionTapped">
+              <ListBox.ItemTemplate>
+                <DataTemplate x:DataType="local:MenuAction">
+                  <StackPanel Orientation="Horizontal" Spacing="16" Background="Transparent">
+                    <Path Classes="ic" Data="{Binding Icon}" />
+                    <TextBlock Classes="label" Classes.danger="{Binding IsDanger}" Text="{Binding Label}" />
+                  </StackPanel>
+                </DataTemplate>
+              </ListBox.ItemTemplate>
+            </ListBox>
+          </StackPanel>
+        </Grid>
+      </Panel>
+
+      <!-- Footer: keyboard hints, messages -->
+      <Grid Grid.Row="2" ColumnDefinitions="*,Auto,*" Margin="64,0">
+        <TextBlock Classes="lo" FontSize="12.5" VerticalAlignment="Center" Text="{Binding KeyHints}" />
+        <TextBlock x:Name="ToastText" Grid.Column="1" Classes="glow" FontSize="15" VerticalAlignment="Center" Opacity="0"
+                   MaxWidth="560" TextTrimming="CharacterEllipsis">
+          <TextBlock.Transitions>
+            <Transitions>
+              <DoubleTransition Property="Opacity" Duration="0:0:0.4" />
+            </Transitions>
+          </TextBlock.Transitions>
+        </TextBlock>
+        <TextBlock Grid.Column="2" Classes="lo" FontSize="12.5" HorizontalAlignment="Right" VerticalAlignment="Center"
+                   Text="{Binding LibraryCount}" IsVisible="{Binding IsDriveScreen}" />
+      </Grid>
+    </Grid>
+
+    <!-- Copying: the whole screen waits, like the console did -->
+    <Panel IsVisible="{Binding IsBusy}" Background="#C0000308">
+      <StackPanel Width="600" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="14">
+        <c:DiscArt Classes="spin" Width="72" Height="72" Seed="{Binding Status}" HorizontalAlignment="Center" />
+        <TextBlock Classes="title glow" FontSize="26" Text="{Binding Status}" HorizontalAlignment="Center" TextTrimming="CharacterEllipsis" />
+        <TextBlock Classes="dim" Text="Do not remove the drive or close PS2Ulix." HorizontalAlignment="Center" />
+        <Grid ColumnDefinitions="*,Auto" Margin="0,10,0,0">
+          <ProgressBar Classes="job" Value="{Binding Progress}" IsIndeterminate="{Binding IsProgressIndeterminate}" VerticalAlignment="Center">
+            <ProgressBar.Transitions>
+              <Transitions>
+                <DoubleTransition Property="Value" Duration="0:0:0.3" />
+              </Transitions>
+            </ProgressBar.Transitions>
+          </ProgressBar>
+          <TextBlock Grid.Column="1" Classes="title" FontSize="20" Margin="16,0,0,0" VerticalAlignment="Center"
+                     Text="{Binding Progress, StringFormat={}{0:0}%}" />
+        </Grid>
+        <TextBlock Classes="lo" Text="{Binding JobDetail}" HorizontalAlignment="Center" />
+        <Button Classes="opt" HorizontalAlignment="Center" Command="{Binding CancelCommand}" Content="Cancel" Margin="0,8,0,0" />
+      </StackPanel>
+    </Panel>
+
+    <!-- Drop target -->
+    <Border x:Name="DropOverlay" Opacity="0" IsHitTestVisible="False" Background="#D9000308">
+      <Border.Transitions>
+        <Transitions>
+          <DoubleTransition Property="Opacity" Duration="0:0:0.15" />
+        </Transitions>
+      </Border.Transitions>
+      <StackPanel Spacing="18" VerticalAlignment="Center" HorizontalAlignment="Center">
+        <c:DiscArt Classes="spin" Width="130" Height="130" Seed="drop" />
+        <TextBlock Classes="title glow" Text="Drop to add" HorizontalAlignment="Center" />
+        <TextBlock Classes="dim" Text=".iso or .zso" HorizontalAlignment="Center" />
+      </StackPanel>
+    </Border>
+
+    <!-- Dialogs: a band across the dimmed screen -->
+    <Panel x:Name="SheetLayer" IsVisible="False" Background="#A6000308">
+      <ContentControl x:Name="SheetHost" HorizontalAlignment="Stretch" VerticalAlignment="Center" HorizontalContentAlignment="Stretch">
+        <ContentControl.Transitions>
+          <Transitions>
+            <DoubleTransition Property="Opacity" Duration="0:0:0.2" />
+          </Transitions>
+        </ContentControl.Transitions>
+      </ContentControl>
+    </Panel>
+
+    <!-- Start-up scene -->
+    <Panel x:Name="IntroLayer" Background="#000000">
+      <Panel.Transitions>
+        <Transitions>
+          <DoubleTransition Property="Opacity" Duration="0:0:0.35" />
+        </Transitions>
+      </Panel.Transitions>
+      <c:BootIntro x:Name="Intro" />
+      <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="10" Margin="0,250,0,0">
+        <TextBlock x:Name="IntroTitle" Classes="title glow" Text="PS2ULIX" FontSize="46" LetterSpacing="14" HorizontalAlignment="Center" Opacity="0" />
+        <TextBlock x:Name="IntroSubtitle" Classes="dim" Text="game manager for Open PS2 Loader" FontSize="14" LetterSpacing="3" HorizontalAlignment="Center" Opacity="0" />
+      </StackPanel>
+      <TextBlock Classes="lo" Text="Click or press any key to skip" FontSize="12" LetterSpacing="1"
+                 HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,36" Opacity="0.55" />
+    </Panel>
+  </Panel>
+</Window>

@@ -1,0 +1,61 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="Ps2Ulix.Gui.SettingsSheet">
+  <!-- Laid out like a system configuration list: one setting per row, value on the right -->
+  <Grid RowDefinitions="Auto,*,Auto">
+    <Grid.Background>
+      <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+        <GradientStop Color="#00030A1E" Offset="0" />
+        <GradientStop Color="#F0030A1E" Offset="0.2" />
+        <GradientStop Color="#F0030A1E" Offset="0.8" />
+        <GradientStop Color="#00030A1E" Offset="1" />
+      </LinearGradientBrush>
+    </Grid.Background>
+    <Border Height="1" Background="{DynamicResource RuleLine}" />
+    <StackPanel Grid.Row="1" Width="660" Margin="0,24,0,8">
+      <TextBlock Classes="title glow" FontSize="27" Text="OPL Settings" HorizontalAlignment="Center" />
+      <TextBlock x:Name="TitleText" Classes="dim" HorizontalAlignment="Center" TextTrimming="CharacterEllipsis" Margin="0,2,0,0" />
+      <Border Height="1" Background="{DynamicResource RuleLine}" Margin="0,14,0,8" />
+      <CheckBox x:Name="Mode1" Classes="cfg" Content="Mode 1   Accurate reads" />
+      <CheckBox x:Name="Mode2" Classes="cfg" Content="Mode 2   Synchronous reads" />
+      <CheckBox x:Name="Mode3" Classes="cfg" Content="Mode 3   Unhook syscalls" />
+      <CheckBox x:Name="Mode4" Classes="cfg" Content="Mode 4   Skip videos" />
+      <CheckBox x:Name="Mode5" Classes="cfg" Content="Mode 5   Emulate DVD-DL" />
+      <CheckBox x:Name="Mode6" Classes="cfg" Content="Mode 6   Disable IGR" />
+      <Button x:Name="DmaRow" Classes="cfg" Click="OnDmaClick">
+        <Grid ColumnDefinitions="*,Auto">
+          <TextBlock Text="DMA mode (HDD only)" FontSize="17" Foreground="{Binding $parent[Button].Foreground}" />
+          <TextBlock x:Name="DmaValue" Grid.Column="1" FontSize="17" Foreground="{DynamicResource TextHi}" />
+        </Grid>
+      </Button>
+      <Grid Classes="cfgtext" ColumnDefinitions="*,Auto">
+        <Panel Classes="bar" Grid.ColumnSpan="2">
+          <Border Background="{DynamicResource SelectBar}" CornerRadius="4" />
+        </Panel>
+        <TextBlock Text="Memory card 1" FontSize="17" Foreground="{DynamicResource TextMid}" Margin="18,8" VerticalAlignment="Center" />
+        <TextBox x:Name="Vmc0Box" Grid.Column="1" Classes="inline" Watermark="physical card" MaxLength="32" Margin="0,0,18,0" />
+      </Grid>
+      <Grid Classes="cfgtext" ColumnDefinitions="*,Auto">
+        <Panel Classes="bar" Grid.ColumnSpan="2">
+          <Border Background="{DynamicResource SelectBar}" CornerRadius="4" />
+        </Panel>
+        <TextBlock Text="Memory card 2" FontSize="17" Foreground="{DynamicResource TextMid}" Margin="18,8" VerticalAlignment="Center" />
+        <TextBox x:Name="Vmc1Box" Grid.Column="1" Classes="inline" Watermark="physical card" MaxLength="32" Margin="0,0,18,0" />
+      </Grid>
+      <Grid Classes="cfgtext" ColumnDefinitions="*,Auto">
+        <Panel Classes="bar" Grid.ColumnSpan="2">
+          <Border Background="{DynamicResource SelectBar}" CornerRadius="4" />
+        </Panel>
+        <TextBlock Text="Alternative startup" FontSize="17" Foreground="{DynamicResource TextMid}" Margin="18,8" VerticalAlignment="Center" />
+        <TextBox x:Name="AltStartupBox" Grid.Column="1" Classes="inline" Watermark="from disc" MaxLength="32" Margin="0,0,18,0" />
+      </Grid>
+      <Border Height="1" Background="{DynamicResource RuleLine}" Margin="0,10,0,4" />
+      <TextBlock Classes="lo" HorizontalAlignment="Center" Text="↑↓ choose · ←→ change · saved to CFG/&lt;game ID&gt;.cfg on the drive" Margin="0,4,0,0" />
+    </StackPanel>
+    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Spacing="30" Margin="0,6,0,26">
+      <Button x:Name="SaveButton" Classes="opt" Content="Save" Click="OnSave" />
+      <Button x:Name="CancelButton" Classes="opt" Content="Cancel" Click="OnCancel" />
+    </StackPanel>
+    <Border Grid.Row="2" Height="1" VerticalAlignment="Bottom" Background="{DynamicResource RuleLine}" />
+  </Grid>
+</UserControl>

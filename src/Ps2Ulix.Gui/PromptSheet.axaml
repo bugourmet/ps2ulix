@@ -1,0 +1,46 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:Ps2Ulix.Gui"
+             x:Class="Ps2Ulix.Gui.PromptSheet"
+             x:DataType="local:PromptSheet">
+  <!-- A dark band across the screen, ruled with light top and bottom -->
+  <Grid RowDefinitions="Auto,*,Auto">
+    <Grid.Background>
+      <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+        <GradientStop Color="#00030A1E" Offset="0" />
+        <GradientStop Color="#F0030A1E" Offset="0.2" />
+        <GradientStop Color="#F0030A1E" Offset="0.8" />
+        <GradientStop Color="#00030A1E" Offset="1" />
+      </LinearGradientBrush>
+    </Grid.Background>
+    <Border Height="1" Background="{DynamicResource RuleLine}" />
+    <StackPanel Grid.Row="1" Width="620" Spacing="14" Margin="0,30,0,10">
+      <TextBlock Classes="title glow" FontSize="27" Text="{Binding Options.Title}" HorizontalAlignment="Center" />
+      <TextBlock Text="{Binding Options.Message}" TextWrapping="Wrap" FontSize="17" TextAlignment="Center"
+                 Foreground="{DynamicResource TextMid}" />
+      <TextBox x:Name="InputBox" IsVisible="{Binding HasInput}" MaxLength="{Binding Options.InputMaxLength}" Margin="40,4" />
+      <ListBox x:Name="ChoiceBox" Classes="bare menu" ItemsSource="{Binding Options.Choices}" IsVisible="{Binding HasChoices}" Margin="40,0">
+        <ListBox.ItemTemplate>
+          <DataTemplate x:DataType="x:String">
+            <TextBlock Classes="label" FontSize="16" Text="{Binding}" />
+          </DataTemplate>
+        </ListBox.ItemTemplate>
+      </ListBox>
+      <StackPanel Orientation="Horizontal" Spacing="18" HorizontalAlignment="Center" IsVisible="{Binding HasMedia}">
+        <TextBlock Classes="lo" Text="Disc type" FontSize="16" VerticalAlignment="Center" />
+        <RadioButton x:Name="CdRadio" Content="CD" GroupName="media" FontSize="16" />
+        <RadioButton x:Name="DvdRadio" Content="DVD" GroupName="media" FontSize="16" />
+      </StackPanel>
+      <Border IsVisible="{Binding HasDetails}" Background="#80000000" CornerRadius="4" Padding="14,10" MaxHeight="320" Margin="0,4">
+        <ScrollViewer HorizontalScrollBarVisibility="Auto">
+          <SelectableTextBlock Text="{Binding Options.Details}" FontSize="13" Foreground="{DynamicResource TextMid}" />
+        </ScrollViewer>
+      </Border>
+    </StackPanel>
+    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Spacing="30" Margin="0,6,0,28">
+      <Button x:Name="OkButton" Classes="opt" Content="{Binding Options.OkText}" Click="OnOk" />
+      <Button x:Name="CancelButton" Classes="opt" Content="Cancel" Click="OnCancel" IsVisible="{Binding Options.ShowCancel}" />
+    </StackPanel>
+    <Border Grid.Row="2" Height="1" VerticalAlignment="Bottom" Background="{DynamicResource RuleLine}" />
+  </Grid>
+</UserControl>
